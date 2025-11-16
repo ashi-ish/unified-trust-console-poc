@@ -16,7 +16,7 @@ Why separate this?
 
 from typing import Generator
 from contextlib import contextmanager
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 
@@ -187,6 +187,8 @@ def check_db_connection() -> bool:
     """
     Verify database connection is working.
     
+    SQLAlchemy 2.0: Must use text() for raw SQL strings.
+    
     Usage:
         if check_db_connection():
             print("✅ Database connected!")
@@ -198,7 +200,9 @@ def check_db_connection() -> bool:
     """
     try:
         with engine.connect() as conn:
-            conn.execute("SELECT 1")  # Simple query to test connection
+            # SQLAlchemy 2.0: Use text() for raw SQL
+            result = conn.execute(text("SELECT 1"))
+            result.close()
         return True
     except Exception as e:
         print(f"❌ Database connection failed: {e}")
