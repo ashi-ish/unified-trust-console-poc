@@ -15,7 +15,7 @@ Why store events?
 """
 
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, UTC
 
 from sqlalchemy import String, Text, Float, Integer, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
@@ -228,7 +228,7 @@ class Event(BaseModel, Base):
         
         # Auto-set when_seen if not provided
         if 'when_seen' not in kwargs:
-            kwargs['when_seen'] = datetime.utcnow()
+            kwargs['when_seen'] = datetime.now(UTC)
         
         super().__init__(**kwargs)
         
